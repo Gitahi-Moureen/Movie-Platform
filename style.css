@@ -548,6 +548,7 @@ h2{
     .movie {
       width: 100%;
     }
+    
   }
   @media (max-width: 320px) {
     .movie {

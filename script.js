@@ -13,50 +13,38 @@ async function getMovies(url) {
 }
 let selectedGenreId = null;
 async function getMoviesByGenre() {
-  const url = `https://api.themoviedb.org/3/discover/movie?api_key=2b84b14886227da4f94141f90f7c08d4&with_genres=${selectedGenreId}&page=1`;
-  const result = await fetch(url);
-  const data = await result.json();
-  showMovies(data.results);
+    const url = `https://api.themoviedb.org/3/discover/movie?api_key=2b84b14886227da4f94141f90f7c08d4&with_genres=${selectedGenreId}&page=1`;
+    const result = await fetch(url);
+    const data = await result.json();
+    showMovies(data.results);
 }
-function showMovies(movies){
+function showMovies(movies) {
     main.innerHTML = ''
     movies.forEach((movie) => {
-        const { title,poster_path,vote_average,overview} = movie
+        const { title, poster_path, vote_average, overview } = movie
         const movieElement = document.createElement('div')
         movieElement.classList.add('movie')
         movieElement.innerHTML = `
-             <img src="${IMG_PATH + poster_path}" alt="${title}">
-          <div class="movie-info">
-          <h3 id="title-${movie.id}" class="truncate">${shortenTitle(title, 15)}</h3>
-            <div class="rating">
-              ${generateStars(vote_average)}
+            <div class="movie-poster">
+                <img src="${IMG_PATH + poster_path}" alt="${title}">
             </div>
-        </div>
-          <div class="overview">
-        <h3>Overview</h3>
-        ${overview}
-        </div>
-         `
-          main.appendChild(movieElement)
-         // Add event listener to the movie element
-         movieElement.addEventListener('click', () => {
-          console.log('Movie clicked');
-          const titleElement = movieElement.querySelector(`#title-${movie.id}`);
-          const overview = movieElement.querySelector('.overview');
-          if (titleElement.classList.contains('truncate')) {
-            titleElement.textContent = title;
-            titleElement.classList.remove('truncate');
-          } else {
-            titleElement.textContent = shortenTitle(title, 15);
-            titleElement.classList.add('truncate');
-          }
-          overview.classList.toggle('show');
-          console.log('Overview class toggled');
-          // Create the new HTML page
-          const moviePage = createMoviePage(movie);
-          // Open the new movie page in a new window or tab
-          const newWindow = window.open('', '_blank');
-          newWindow.document.body.appendChild(moviePage);
+            <div class="movie-info">
+                <h3 id="title-${movie.id}" class="truncate">${shortenTitle(title, 15)}</h3>
+                <span class="${getClassByRate(vote_average)}">${vote_average}</span>
+                <div class="rating">
+                    ${generateStars(vote_average)}
+                </div>
+            </div>
+            <div class="overview hidden">
+                <h3>Overview</h3>
+                ${overview}
+            </div>
+        `
+        main.appendChild(movieElement)
+        // Add event listener to the movie element
+        movieElement.addEventListener('click', () => {
+            const overview = movieElement.querySelector('.overview');
+            overview.classList.toggle('show');
         });
     })
 }
@@ -68,66 +56,56 @@ function shortenTitle(title, length) {
     }
 }
 function generateStars(vote) {
-  const fullStars = Math.floor(vote / 2);
-  let halfStar;
+    const fullStars = Math.floor(vote / 2);
+    let halfStar;
     if (vote % 2 !== 0) {
-     halfStar = 1;
-      } else {
-      halfStar = 0;
+        halfStar = 1;
+    } else {
+        halfStar = 0;
     }
-  let stars = '';
-  for (let i = 0; i < fullStars; i++) {
-    stars += '★';
-  }
-  if (halfStar) {
-    stars += '☆';
-  }
-  return stars;
+    let stars = '';
+    for (let i = 0; i < fullStars; i++) {
+        stars += '★';
+    }
+    if (halfStar) {
+        stars += '☆';
+    }
+    return stars;
 }
-function createMoviePage(movie) {
-  const moviePage = document.createElement('div');
-  moviePage.classList.add('movie-page');
-  moviePage.innerHTML = `
-    <h1>${movie.title}</h1>
-    <img src="${IMG_PATH + movie.poster_path}" alt="${movie.title}">
-    <div class="rating">
-      ${generateStars(movie.vote_average)}
-    </div>
-    <div class="overview">
-      <h3>Overview</h3>
-      ${movie.overview}
-    </div>
-  `;
-  return moviePage;
+function getClassByRate(vote){
+    if(vote >= 8){
+       return 'green'
+    }else if(vote >= 5){
+        return 'orange'
+    }else{
+        return 'red'
+    }
 }
-form.addEventListener('submit',(e) =>{
+form.addEventListener('submit', (e) => {
     e.preventDefault()
     const searchTerm = search.value
-    if(searchTerm && searchTerm !==''){
+    if (searchTerm && searchTerm !== '') {
         getMovies(SEARCH_API + searchTerm)
         search.value = ''
-    }
-    else{
+    } else {
         window.location.reload()
     }
 })
-// Fetch genres and create the sidebar
 async function getGenres() {
     const result = await fetch('https://api.themoviedb.org/3/genre/movie/list?api_key=2b84b14886227da4f94141f90f7c08d4');
     const data = await result.json();
     const genreList = document.getElementById('genre-list');
     data.genres.forEach((genre) => {
-      const genreItem = document.createElement('li');
-      genreItem.textContent = genre.name;
-      genreItem.dataset.genreId = genre.id;
-      genreItem.addEventListener('click', () => {
-        selectedGenreId = genre.id;
-        getMoviesByGenre();
-      });
-      genreList.appendChild(genreItem);
+        const genreItem = document.createElement('li');
+        genreItem.textContent = genre.name;
+        genreItem.dataset.genreId = genre.id;
+        genreItem.addEventListener('click', () => {
+            selectedGenreId = genre.id;
+            getMoviesByGenre();
+        });
+        genreList.appendChild(genreItem);
     });
 }
-// Add an event listener to the search input to filter movies as you type
 search.addEventListener('input', async () => {
     const searchTerm = search.value.toLowerCase();
     if (searchTerm) {
@@ -139,4 +117,14 @@ search.addEventListener('input', async () => {
         getMovies(API_URL);
     }
 });
+const hamburgerMenu = document.querySelector('.hamburger-menu');
+hamburgerMenu.addEventListener('click', () => {
+    const genresAside = document.querySelector('aside');
+    genresAside.classList.toggle('hide-genres');
+});
 getGenres();
+
+
+
+
+
