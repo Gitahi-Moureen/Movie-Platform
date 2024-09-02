@@ -2,7 +2,7 @@ const API_URL = 'https://api.themoviedb.org/3/discover/movie?sort_by=popularity.
 const IMG_PATH = 'https://image.tmdb.org/t/p/w500'
 const SEARCH_API = 'https://api.themoviedb.org/3/search/movie?api_key=2b84b14886227da4f94141f90f7c08d4&query="'
 const main = document.getElementById('main')
-const form = document.getElementById('form')
+// const form = document.getElementById('form')
 const search = document.getElementById('search')
 // Get initial movies
 getMovies(API_URL)
@@ -124,7 +124,26 @@ hamburgerMenu.addEventListener('click', () => {
 });
 getGenres();
 
-
+self.addEventListener('install', (event) => {
+    event.waitUntil(
+      caches.open('my-cache').then((cache) => {
+        return cache.addAll([
+          '/',
+          '/index.html',
+          '/styles.css',
+          '/script.js',
+        ]);
+      })
+    );
+  });
+  
+  self.addEventListener('fetch', (event) => {
+    event.respondWith(
+      caches.match(event.request).then((response) => {
+        return response || fetch(event.request);
+      })
+    );
+  });
 
 
 

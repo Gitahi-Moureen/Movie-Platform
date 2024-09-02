@@ -1,0 +1,20 @@
+{
+    "short_name": "DemoPWA",
+    "name": "Demo Progressive Web App",
+    "icons": [
+        {
+            "src": "/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "images/Screenshot from 2024-09-02 14-21-55.png"
+        },
+        {
+            "src": "/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "images/Screenshot from 2024-09-02 14-21-55.png"
+        }
+    ],
+    "start_url": "/https://play.google.com/store/search?q=Netflix&c=apps&hl=en",
+    "display": "standalone",
+    "background_color": "#FFFFFF",
+    "theme_color": "#317EFB"
+}

@@ -4,14 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie App</title>
+    <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="style.css">
 </head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9WBJF3YM2J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9WBJF3YM2J');
+</script>
 <body>
     <aside>
         <div class="genres">
           <div id="chill"><img src="images/chill-removebg-preview.png" alt="chill" width="100px"></div>
           <h2><b>CHILL</b></h2>
           <h3>Genres</h3>
+         
           <ul id="genre-list"></ul>
         </div>
       </aside>
@@ -19,6 +29,7 @@
         <form id="form">
             <input type="text" id="search" class="search" placeholder="Search">
         </form>
+        <button id = "intallBtn">Install App</button>
         <button class="hamburger-menu">☰</button>
     </header>
     <main id="main"></main>
@@ -28,15 +39,8 @@
       </div>
      <span class="${getClassByRate(vote_average)}">${vote_average}</span>
   <script src="script.js"></script>
+  <script src="app.js"></script>
 
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9WBJF3YM2J"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-9WBJF3YM2J');
-</script>
 </body>
 </html>
